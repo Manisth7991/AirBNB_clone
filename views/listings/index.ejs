@@ -13,7 +13,12 @@
       }
       @media (max-width:500px) {
         .filter{
-          margin-right: 2px;
+          display: grid;
+          grid-template-rows: 1fr 1fr 1fr;
+          grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+        .tax-toggle{
+          grid-column: 3/5;
         }
       }
       .filter:hover{
