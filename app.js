@@ -32,8 +32,14 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const dbUrl= process.env.ATLASDB_URL;
 
+
 async function main() {
-    await mongoose.connect(dbUrl);
+     mongoose.connect(dbUrl).then(() => {
+        console.log("Connected to MongoDB Atlas");
+     })
+    .catch(err => {
+        console.log("Error connecting to MongoDB Atlas", err);
+    });
 }
 
 main()
@@ -50,7 +56,7 @@ main()
         touchAfter:24 *3600,
     });
 
-    store.on("error", () =>{
+    store.on("error", (err) =>{
         console.log("ERROR IN MONGO SESSION STORE",err);
     });
 
@@ -66,6 +72,7 @@ const sessionOptions = {
         httponly: true,
     },
 };
+
 
 app.use(session(sessionOptions));
 app.use(flash());
