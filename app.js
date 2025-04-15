@@ -22,6 +22,7 @@ const MongoStore = require('connect-mongo');
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const homeRouter = require("./routes/home.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -95,6 +96,7 @@ app.use((req,res,next) =>{
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/",userRouter);
+app.use("/", homeRouter);
 
 app.all("*", (req, res, next) => {
     next(new ExpressError(404, "Page not Found!"));

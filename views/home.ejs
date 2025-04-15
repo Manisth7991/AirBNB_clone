@@ -1,0 +1,160 @@
+<% layout("layouts/boilerplate") %>
+
+<style>
+  #hero {
+    background: url("https://source.unsplash.com/1600x600/?travel,stay") center/cover no-repeat;
+    color: white;
+    padding: 8rem 1rem;
+    text-align: center;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  #hero h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
+  }
+
+  #hero p {
+    font-size: 1.25rem;
+    margin: 1rem 0;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  }
+
+  #hero a {
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 2rem;
+  }
+
+  #filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .filter {
+    text-align: center;
+    opacity: 0.7;
+    transition: 0.3s;
+  }
+
+  .filter:hover {
+    opacity: 1;
+    cursor: pointer;
+    transform: scale(1.05);
+  }
+
+  .filter p {
+    font-size: 12px;
+  }
+
+  .tax-info {
+    display: none;
+  }
+
+  .tax-toggle {
+    border: 1px solid #ccc;
+    border-radius: .8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2.5rem;
+    padding: .5rem;
+    margin-top: 1rem;
+  }
+
+  .listing-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .listing-card {
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: 0.3s;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .listing-card:hover {
+    transform: scale(1.02);
+  }
+
+  .listing-card img {
+    border-radius: 1rem 1rem 0 0;
+  }
+
+</style>
+
+<!-- Hero Section -->
+<div id="hero">
+  <h1>Welcome to WanderLust</h1>
+  <p>Find and share unique places to stay across the globe</p>
+  <a href="/listings" class="btn btn-light">Explore Listings</a>
+</div>
+
+<!-- Filters -->
+<div id="filters">
+  <% const filters = [
+    {img:"3726d94b-534a-42b8-bca0-a0304d912260", label:"Trending"},
+    {img:"aaa02c2d-9f0d-4c41-878a-68c12ec6c6bd", label:"Farms"},
+    {img:"677a041d-7264-4c45-bb72-52bff21eb6e8", label:"Lakefront"},
+    {img:"c5a4f6fc-c92c-4ae8-87dd-57f1ff1b89a6", label:"OMG!"},
+    {img:"ed8b9e47-609b-44c2-9768-33e6a22eccb2", label:"Top cities"},
+    {img:"732edad8-3ae0-49a8-a451-29a8010dcc0c", label:"Cabins"},
+    {img:"4221e293-4770-4ea8-a4fa-9972158d4004", label:"Caves"},
+    {img:"3fb523a0-b622-4368-8142-b5e03df7549b", label:"Amazing pools"},
+    {img:"bcd1adc0-5cee-4d7a-85ec-f6730b0f8d0c", label:"Beach front"},
+    {img:"827c5623-d182-474a-823c-db3894490896", label:"Ryokans"},
+    {img:"d7445031-62c4-46d0-91c3-4f29f9790f7a", label:"Earth homes"},
+    {img:"7630c83f-96a8-4232-9a10-0398661e2e6f", label:"Rooms"},
+    {img:"1b6a8b70-a3b6-48b5-88e1-2243d9172c06", label:"Castles"}
+  ]; %>
+
+  <% filters.forEach(f => { %>
+    <div class="filter">
+      <div><img src="https://a0.muscache.com/pictures/<%= f.img %>.jpg" style="height: 25px;"></div>
+      <p><%= f.label %></p>
+    </div>
+  <% }); %>
+
+  <!-- Tax Toggle -->
+  <div class="tax-toggle">
+    <div class="form-check-reverse form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+      <label class="form-check-label" for="flexSwitchCheckDefault">Display Total after taxes</label>
+    </div>
+  </div>
+</div>
+
+<!-- Listings Grid -->
+<div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1">
+  <% for(let listing of allListings){ %>
+    <a href="/listings/<%= listing._id %>" class="listing-link">
+      <div class="card listing-card col">
+        <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 20rem; object-fit: cover;">
+        <div class="card-body">
+          <p class="card-text">
+            <b><%= listing.title %></b><br>
+            ₹<%= listing.price.toLocaleString("en-IN") %>/night
+            <i class="tax-info">&nbsp; +18% GST</i>
+          </p>
+        </div>
+      </div>
+    </a>
+  <% } %>
+</div>
+
+<script>
+  const taxSwitch = document.getElementById("flexSwitchCheckDefault");
+  taxSwitch.addEventListener("click", () => {
+    const taxInfo = document.getElementsByClassName("tax-info");
+    for (let info of taxInfo) {
+      info.style.display = (info.style.display !== "inline") ? "inline" : "none";
+    }
+  });
+</script>

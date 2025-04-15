@@ -79,6 +79,18 @@ body{
     text-decoration: none;
 }
 
+.listing-card {
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: 0.3s;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .listing-card:hover {
+    transform: scale(1.02);
+  }
+
 /* New Page */
 
 .add-btn{
