@@ -5,42 +5,60 @@
             <div class="col-8 offset-2">
                 <br><br>
                 <h3>Edit your Listing</h3>
-                <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
+                <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data" id="editForm">
+                    
+                    <!-- Title -->
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
-                        <input name="listing[title]" value="<%= listing.title %>" type="text" class="form-control border-primary text-success" required>
-                        <div class="valid-feedback">Title Looks good!</div>
+                        <input name="listing[title]" value="<%= listing.title %>" type="text" class="form-control" required>
+                        <div class="valid-feedback">Title looks good!</div>
+                        <div class="invalid-feedback">Please provide a title.</div>
                     </div>
+
+                    <!-- Description -->
                     <div class="mb-3">
                         <label for="description" class="form-label">Description</label>
-                        <textarea name="listing[description]" type="text" class="form-control border-primary text-success" required><%= listing.description %></textarea>
-                        <div class="invalid-feedback">Please give some Description</div>
+                        <textarea name="listing[description]" class="form-control" required><%= listing.description %></textarea>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please give some description.</div>
                     </div>
+
+                    <!-- Original Image -->
                     <div class="mb-3">
                         Original Listing image <br>
                         <img src="<%= originalImageUrl %>" class="img-fluid" alt="Listing image">
                     </div>
+
+                    <!-- New Image -->
                     <div class="mb-3">
                         <label for="image" class="form-label">Upload new Image</label>
-                        <input name="listing[image]" type="file" class="form-control border-primary text-success">
+                        <input name="listing[image]" type="file" class="form-control">
                     </div>
+
+                    <!-- Price and Country -->
                     <div class="row">
                         <div class="mb-3 col-md-4">
                             <label for="price" class="form-label">Price</label>
-                            <input name="listing[price]" value="<%= listing.price %>" type="number" class="form-control border-primary text-success" required>
-                            <div class="invalid-feedback">Price should be Valid</div>
+                            <input name="listing[price]" value="<%= listing.price %>" type="number" class="form-control" required>
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Price should be valid.</div>
                         </div>
                         <div class="mb-3 col-md-8">
-                            <label for="country" class="form-label">Country</label>
-                            <input name="listing[country]" value="<%= listing.country %>" type="text" class="form-control border-primary text-success" required>
-                            <div class="invalid-feedback">Country should be Valid</div>
+                            <label for="countryInput" class="form-label">Country</label>
+                            <input name="listing[country]" id="countryInput" value="<%= listing.country %>" type="text" class="form-control" required>
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Country should contain only letters, spaces, commas, or parentheses.</div>
                         </div>
                     </div>
+
+                    <!-- Location -->
                     <div class="mb-3">
-                        <label for="location" class="form-label">Location</label>
-                        <input name="listing[location]" value="<%= listing.location %>" type="text" class="form-control border-primary text-success" required>
-                        <div class="invalid-feedback">Location should be Valid</div>
+                        <label for="locationInput" class="form-label">Location</label>
+                        <input name="listing[location]" id="locationInput" value="<%= listing.location %>" type="text" class="form-control" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Location should contain only letters, spaces, commas, or parentheses.</div>
                     </div>
+
                     <br>
                     <button class="btn btn-dark edit-btn">Edit</button>
                     <br><br>
@@ -48,4 +66,67 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript Validation -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("editForm");
+        
+            const fields = [
+                {
+                    input: document.getElementById("locationInput"),
+                    regex: /^[A-Za-z\s(),]+$/,
+                    errorMessage: "Location should contain only letters, spaces, commas, or parentheses."
+                },
+                {
+                    input: document.getElementById("countryInput"),
+                    regex: /^[A-Za-z\s(),]+$/,
+                    errorMessage: "Country should contain only letters, spaces, commas, or parentheses."
+                }
+            ];
+        
+            function validateField(field) {
+                const input = field.input;
+                const value = input.value.trim();
+                const validFeedback = input.parentElement.querySelector(".valid-feedback");
+                const invalidFeedback = input.parentElement.querySelector(".invalid-feedback");
+        
+                // Reset both feedback messages
+                validFeedback.style.display = "none";
+                invalidFeedback.style.display = "none";
+                input.classList.remove("is-valid", "is-invalid");
+        
+                // Validation
+                if (value === "" || !field.regex.test(value)) {
+                    input.classList.add("is-invalid");
+                    invalidFeedback.textContent = field.errorMessage;
+                    invalidFeedback.style.display = "block";
+                    return false;
+                } else {
+                    input.classList.add("is-valid");
+                    validFeedback.style.display = "block";
+                    return true;
+                }
+            }
+        
+            // Validate on form submission
+            form.addEventListener("submit", e => {
+                let allValid = true;
+                fields.forEach(field => {
+                    const isValid = validateField(field);
+                    if (!isValid) allValid = false;
+                });
+        
+                if (!allValid) {
+                    e.preventDefault(); // Stop submission if any field is invalid
+                }
+            });
+        
+            // Optional: Validate on blur too
+            fields.forEach(field => {
+                field.input.addEventListener("blur", () => validateField(field));
+            });
+        });
+        </script>
+        
 </body>
