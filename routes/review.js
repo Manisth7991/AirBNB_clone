@@ -12,6 +12,10 @@ const reviewController= require("../controller/review.js");
 // POST Review ROUTE
 router.post("/",isLoggedIn,validateReview,wrapAsync(reviewController.createReview));
 
+// PUT (Edit) Review ROUTE
+router.put("/:reviewId", isLoggedIn, isReviewAuthor, validateReview, wrapAsync(reviewController.updateReview));
+
+
 // DELETE REVIEW ROUTE
 router.delete("/:reviewId",isLoggedIn,isReviewAuthor,wrapAsync(reviewController.deleteReview));
 

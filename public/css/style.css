@@ -52,6 +52,13 @@ body{
 
 /* Cards */
 
+.card {
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 8px; /* Optional: make it rounded and clean */
+  }
+  
+
 .listing-card{
     border: none !important;
     margin-bottom: 2rem !important;

@@ -15,6 +15,22 @@ module.exports.createReview=async (req,res) =>{
     res.redirect(`/listings/${listing._id}`);
 };
 
+// UPDATE REVIEW ROUTE
+module.exports.updateReview = async (req, res) => {
+    const { id, reviewId } = req.params;
+    const { comment, rating } = req.body.review;
+
+    const updatedReview = await Review.findByIdAndUpdate(
+        reviewId,
+        { comment, rating },
+        { new: true, runValidators: true }
+    );
+
+    req.flash("success", "Review updated");
+    res.redirect(`/listings/${id}`);
+};
+
+
 // DELETE REVIEW ROUTE
 
 module.exports.deleteReview=async(req,res) =>{

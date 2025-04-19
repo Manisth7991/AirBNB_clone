@@ -1,81 +1,144 @@
 <% layout("/layouts/boilerplate") %>
 <div class="row mt-4">
-    <div class="col-8 offset-2">
+  <!-- Listing Details -->
+  <div class="col-8 offset-2">
     <h3><%= listing.title %></h3>
-</div>
-    <div class="card col-8 offset-2 show-card listing-card">
-        <img src="<%= listing.image.url %>" class="card-img-top show-image" alt="listing_image">
-  <div class="card-body mt-2">
-    <p class="card-text"> <b>Owned By:</b><i><%= listing.owner.username %></i> </p>
-    <p class="card-text"></p><%= listing.description %> </p>
-    <p class="card-text"></p>&#8377; <%= listing.price.toLocaleString("en-IN") %> </p>
-    <p class="card-text"></p><%= listing.location %> </p>
-    <p class="card-text"></p><%= listing.country %> </p>
+  </div>
+  <div class="card col-8 offset-2 show-card listing-card">
+    <img src="<%= listing.image.url %>" class="card-img-top show-image" alt="listing_image">
+    <div class="card-body mt-2">
+      <p class="card-text"><b>Owned By:</b> <i><%= listing.owner.username %></i></p>
+      <p class="card-text"><%= listing.description %></p>
+      <p class="card-text">&#8377; <%= listing.price.toLocaleString("en-IN") %></p>
+      <p class="card-text"><%= listing.location %></p>
+      <p class="card-text"><%= listing.country %></p>
+    </div>
+  </div>
+  <br>
+  <% if(currUser && currUser._id.equals(listing.owner._id)) { %>
+  <div class="btns">
+    <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-auto offset-2 edit-btn">Edit</a>
+    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+      <button class="btn btn-dark offset-2 mb-2">Delete</button>
+    </form>   
+  </div>
+  <% } %>
+
+  <!-- Review Submission Form (for users who are logged in) -->
+  <div class="col-8 offset-2 mt-1">
+    <hr>
+    <% if(currUser){ %>
+      <h4>Leave a Rating</h4>
+      <form class="needs-validation" action="/listings/<%= listing._id %>/reviews" method="POST" novalidate>
+        <div class="mt-4 mb-2">
+          <label for="rating" class="form-label mt-3 border-primary text-success">Rating</label>
+          <fieldset class="starability-slot">
+            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
+        </div>
+        <div class="border-primary text-success">
+          <label for="comment" class="form-label">Comments</label>
+          <textarea name="review[comment]" id="comment" cols="15" rows="4" class="form-control border-primary text-success" required></textarea>
+          <div class="invalid-feedback">Please add some comments for review</div>
+        </div>
+        <br>
+        <button class="btn btn-outline-dark border-primary text-success">Submit</button>
+      </form>
+      <hr>
+    <% } %>
+
+   <!-- Reviews List -->
+<p><b>All Reviews</b></p>
+  <div class="row mb-3 row-cols-xl-2 row-cols-md-2 row-cols-1">
+    <% for (let review of listing.reviews) { %>
+        <div class="col mb-3">
+          <div class="card text-success h-100">
+            <div class="card-body d-flex flex-column ms-2">
+              <h5 class="card-title">@<%= review.author.username %></h5>
+              <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+              <p class="card-text mb-2"><%= review.comment %></p>
+      
+              <!-- Timestamps -->
+              <div class="mt-1">
+                <small class="text-muted d-block">
+                  <b>Created:</b> <%= new Date(review.created_at).toLocaleString("en-IN") %>
+                </small>
+                <small class="text-muted d-block">
+                  <b>Updated:</b> <%= new Date(review.updated_at).toLocaleString("en-IN") %>
+                </small>
+              </div>
+      
+              <!-- ACTION BUTTONS AND FORMS -->
+              <% if (currUser && currUser._id.equals(review.author._id)) { %>
+                <!-- Toggle Edit Button -->
+                <button class="btn btn-sm btn-outline-primary mt-2 mb-2" onclick="toggleEditForm('<%= review._id %>')">
+                  Edit Review
+                </button>
+      
+                <!-- Hidden Edit Form -->
+                <div id="edit-form-<%= review._id %>" class="edit-form card p-2 bg-light" style="display: none;">
+                  <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=PUT">
+                    <div class="mb-2">
+                      <label class="form-label">Edit Rating</label>
+                      <fieldset class="starability-slot">
+                        <% for (let i = 1; i <= 5; i++) { %>
+                          <input
+                            type="radio"
+                            id="edit-rate<%= i %>-<%= review._id %>"
+                            name="review[rating]"
+                            value="<%= i %>"
+                            <%= review.rating === i ? "checked" : "" %>
+                          />
+                          <label for="edit-rate<%= i %>-<%= review._id %>" title="<%= i %> star"><%= i %> star</label>
+                        <% } %>
+                      </fieldset>
+                    </div>
+                    <div class="mb-2">
+                      <label class="form-label">Edit Comment</label>
+                      <textarea name="review[comment]" class="form-control"><%= review.comment %></textarea>
+                    </div>
+                    <button class="btn btn-sm btn-outline-success">Update Review</button>
+                  </form>
+                </div>
+              <% } %>
+      
+              <!-- Delete Review Button -->
+              <% if (currUser && currUser._id.equals(review.author._id)) { %>
+                <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" class="mt-2">
+                  <button class="btn btn-sm btn-dark mb-2">Delete</button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      <% } %>      
+    </div>
   </div>
 </div>
-    <br>
-    <% if(currUser && currUser._id.equals(listing.owner._id)) {%>
-    <div class="btns">
-        <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-auto offset-2 edit-btn">Edit</a>
-    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
-        <button class="btn btn-dark offset-4">Delete</button>
-    </form>   
-    </div>
-    <% } %>
-    <div class="col-8 offset-2 mt-1">
-        <hr>
-        <% if(currUser){ %>
-        <h4>Leave a Rating</h4>
-        <form class="needs-validation" action="/listings/<%= listing._id %>/reviews" method="POST" novalidate>
-            <div class=" mt-4 mb-2">
-            <label for="rating" class="form-label mt-3 border-primary text-success">Rating</label>
-            <fieldset class="starability-slot">
-                <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
-                <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                <label for="first-rate1" title="Terrible">1 star</label>
-                <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                <label for="first-rate2" title="Not good">2 stars</label>
-                <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                <label for="first-rate3" title="Average">3 stars</label>
-                <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                <label for="first-rate4" title="Very good">4 stars</label>
-                <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                <label for="first-rate5" title="Amazing">5 stars</label>
-              </fieldset>
-            </div>
-            <div class="border-primary text-success">
-                <label for="comment" class="form-label ">Comments</label>
-                <textarea name="review[comment]" id="comment" cols="15" rows="4" class="form-control border-primary text-success" required></textarea>
-                <div class="invalid-feedback">Please add some comments for review</div>
-            </div>
-            <br>
-            <button class="btn btn-outline-dark border-primary text-success">Submit</button>
-        </form>
-        <hr>
-        <% } %>
-        <p><b>All Reviews</b></p>
-<div class="row mb-3 row-cols-xl-2 row-cols-md-2 row-cols-1">
-    <% for(let review of listing.reviews) { %>
-        <div class="col mb-3">
-            <div class="card border-primary text-success h-100">
-                <div class="card-body d-flex flex-column ms-2">
-                    <h5 class="card-title">@<%= review.author.username %></h5>
-                    <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
-                    <p class="card-text mb-2"><%= review.comment %></p>
-                    <div class="mt-auto">
-                        <form class="mb-3" method="post" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-                            <button class="btn btn-sm btn-dark">
-                                Delete
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <% } %>
-</div>  
-    </div>
-</div>
 
-
-
+<!-- Inline JavaScript for toggling the edit form -->
+<script>
+    function toggleEditForm(reviewId) {
+      // Hide all other forms first
+      document.querySelectorAll('.edit-form').forEach(form => {
+        if (form.id !== `edit-form-${reviewId}`) {
+          form.style.display = 'none';
+        }
+      });
+  
+      // Toggle current form
+      const form = document.getElementById(`edit-form-${reviewId}`);
+      if (!form) return;
+      form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+  </script>

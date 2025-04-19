@@ -1,46 +1,125 @@
 <% layout("/layouts/boilerplate") %>
 <body>
-    <div class="row">
-        <div class="col-8 offset-2">
-            <br><br>
-    <h3>Create a New Listing</h3>
-    <form method="post" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input name="listing[title]" placeholder="Add a catchy title" type="text" class="form-control border-primary text-success" required>
-            <div class="valid-feedback">Title Looks good!</div>
-        </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea name="listing[description]" type="text" class="form-control border-primary text-success" required></textarea>
-            <div class="invalid-feedback">Please give some Description</div>
-        </div>
-        <div class="mb-3">
-            <label for="image" class="form-label">Upload listing image</label>
-            <input name="listing[image]" type="file" class="form-control border-primary text-success" required>
-        </div>
+    <div class="container">
         <div class="row">
-            <div class="mb-3 col-md-4">
-                <label for="price" class="form-label">Price</label>
-                <input name="listing[price]" placeholder="1200" class="form-control border-primary text-success" required>
-                <div class="invalid-feedback">Price should be Valid</div>
-            </div>
-            <div class="mb-3 col-md-8">
-                <label for="country" class="form-label">Country</label>
-                <input name="listing[country]" placeholder="India" type="text" class="form-control border-primary text-success" required>
-                <div class="invalid-feedback">Country should be Valid</div>
-            </div>
-        </div>
-        <div class="mb-3">
-            <label for="location" class="form-label">Location</label>
-            <input name="listing[location]" placeholder="Jaipur,Rajasthan" type="text" class="form-control border-primary text-success" required>
-            <div class="invalid-feedback">Location should be Valid</div>
-        </div>
-        <br>
-        <button class="btn btn-dark add-btn">Add</button>
-        <br><br>
-    </form>
-</body>
-</div>
-</div>
+            <div class="col-8 offset-2">
+                <br><br>
+                <h3>Create a New Listing</h3>
+                <form method="post" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data" id="newListingForm">
+                    
+                    <!-- Title -->
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input name="listing[title]" placeholder="Add a catchy title" type="text" class="form-control border-primary text-success" required>
+                        <div class="valid-feedback">Title looks good!</div>
+                        <div class="invalid-feedback">Please provide a title.</div>
+                    </div>
 
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="listing[description]" placeholder="Describe the listing" class="form-control border-primary text-success" required></textarea>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please give some description.</div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Upload Listing Image</label>
+                        <input name="listing[image]" type="file" class="form-control border-primary text-success" required>
+                    </div>
+
+                    <!-- Price and Country -->
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label for="price" class="form-label">Price</label>
+                            <input name="listing[price]" placeholder="1200" class="form-control border-primary text-success" required>
+                            <div class="invalid-feedback">Price should be valid.</div>
+                        </div>
+                        <div class="mb-3 col-md-8">
+                            <label for="countryInput" class="form-label">Country</label>
+                            <input name="listing[country]" id="countryInput" placeholder="India" type="text" class="form-control border-primary text-success" required>
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Country should contain only letters, spaces, commas, or parentheses.</div>
+                        </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="mb-3">
+                        <label for="locationInput" class="form-label">Location</label>
+                        <input name="listing[location]" id="locationInput" placeholder="Jaipur, Rajasthan" type="text" class="form-control border-primary text-success" required>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Location should contain only letters, spaces, commas, or parentheses.</div>
+                    </div>
+
+                    <br>
+                    <button class="btn btn-dark add-btn">Add</button>
+                    <br><br>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Validation -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("newListingForm");
+
+            const fields = [
+                {
+                    input: document.getElementById("locationInput"),
+                    regex: /^[A-Za-z\s(),]+$/,
+                    errorMessage: "Location should contain only letters, spaces, commas, or parentheses."
+                },
+                {
+                    input: document.getElementById("countryInput"),
+                    regex: /^[A-Za-z\s(),]+$/,
+                    errorMessage: "Country should contain only letters, spaces, commas, or parentheses."
+                }
+            ];
+
+            function validateField(field) {
+                const input = field.input;
+                const value = input.value.trim();
+                const validFeedback = input.parentElement.querySelector(".valid-feedback");
+                const invalidFeedback = input.parentElement.querySelector(".invalid-feedback");
+
+                // Reset both feedback messages
+                validFeedback.style.display = "none";
+                invalidFeedback.style.display = "none";
+                input.classList.remove("is-valid", "is-invalid");
+
+                // Validation
+                if (value === "" || !field.regex.test(value)) {
+                    input.classList.add("is-invalid");
+                    invalidFeedback.textContent = field.errorMessage;
+                    invalidFeedback.style.display = "block";
+                    return false;
+                } else {
+                    input.classList.add("is-valid");
+                    validFeedback.style.display = "block";
+                    return true;
+                }
+            }
+
+            // Validate on form submission
+            form.addEventListener("submit", e => {
+                let allValid = true;
+                fields.forEach(field => {
+                    const isValid = validateField(field);
+                    if (!isValid) allValid = false;
+                });
+
+                if (!allValid) {
+                    e.preventDefault(); // Stop submission if any field is invalid
+                }
+            });
+
+            // Optional: Validate on blur too
+            fields.forEach(field => {
+                field.input.addEventListener("blur", () => validateField(field));
+            });
+        });
+    </script>
+
+</body>
