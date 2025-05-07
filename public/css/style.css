@@ -53,6 +53,7 @@ body{
 /* Cards */
 
 .card {
+  padding: 3px;
     outline: none !important;
     box-shadow: none !important;
     border-radius: 8px; /* Optional: make it rounded and clean */

@@ -5,10 +5,28 @@ const Listing = require("../models/listing.js");
 // ALL FOR CALLBACK
 
 // index
-module.exports.index=async (req, res) => {
-    const allListings = await Listing.find({})
-    res.render("listings/index.ejs", { allListings });
+// index route with category filter
+module.exports.index = async (req, res) => {
+    try {
+        const { category } = req.query; // Extract category from the query params
+        let filter = {}; // Default filter (show all listings)
+
+        // If category is provided, update the filter to match the category
+        if (category) {
+            filter.category = category; 
+        }
+
+        // Fetch listings based on the filter
+        const allListings = await Listing.find(filter); 
+
+        // Pass the filtered listings and the category to the EJS view
+        res.render("listings/index.ejs", { allListings, category });
+    } catch (err) {
+        req.flash("error", "Something went wrong while fetching listings.");
+        res.redirect("/listings");
+    }
 };
+
 
 // new route
 

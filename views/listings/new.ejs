@@ -51,6 +51,28 @@
                         <div class="valid-feedback">Looks good!</div>
                         <div class="invalid-feedback">Location should contain only letters, spaces, commas, or parentheses.</div>
                     </div>
+                    <!-- Category -->
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select name="listing[category]" id="category" class="form-select border-primary text-success" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Trending">Trending</option>
+                            <option value="Farms">Farms</option>
+                            <option value="Lakefront">Lakefront</option>
+                            <option value="OMG!">OMG!</option>
+                            <option value="Top cities">Top cities</option>
+                            <option value="Cabins">Cabins</option>
+                            <option value="Caves">Caves</option>
+                            <option value="Amazing pools">Amazing pools</option>
+                            <option value="Beach front">Beach front</option>
+                            <option value="Ryokans">Ryokans</option>
+                            <option value="Earth homes">Earth homes</option>
+                            <option value="Rooms">Rooms</option>
+                            <option value="Castles">Castles</option>
+                        </select>
+                        <div class="invalid-feedback">Please select a category.</div>
+                    </div>
+
 
                     <br>
                     <button class="btn btn-dark add-btn">Add</button>
