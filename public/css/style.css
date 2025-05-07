@@ -109,6 +109,7 @@ body{
     background-color: #fe424d !important;
     padding: 5px 25px !important;   
     border: none !important;
+    height: 38px !important;
 }
 
 
@@ -127,3 +128,99 @@ body{
 .img-fluid{
     border-radius: 1rem !important;
 }
+
+/* Review Card Styling */
+.card.text-success {
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    background-color: #f9fff9;
+  }
+  
+  .card.text-success:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  }
+/* Edit Form Styling */
+.edit-form {
+    background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+    border: 1px solid #ced4da;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+  }
+  
+  /* Starability integration spacing */
+  .starability-slot {
+    margin-top: -6px;
+    margin-bottom: 12px;
+  }
+  
+  /* Form Label */
+  .card .form-label {
+    font-weight: 600;
+    color: #157347; /* Darker Bootstrap success green */
+    font-size: 14px;
+  }
+  
+  /* Comment Styling */
+  .card-text {
+    font-size: 15.5px;
+    color: #444;
+    line-height: 1.5;
+  }
+  
+  /* Buttons */
+  .card .btn-outline-primary,
+  .card .btn-outline-success {
+    border-radius: 20px;
+    padding: 6px 16px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  
+  .card .btn-outline-primary:hover,
+  .card .btn-outline-success:hover {
+    background-color: #157347;
+    color: #fff;
+  }
+  
+  /* Small Buttons */
+  .card .btn-sm {
+    font-size: 13px;
+    padding: 4px 10px;
+  }
+  
+  /* Timestamp */
+  .text-muted {
+    font-size: 12px;
+    opacity: 0.75;
+  }
+  
+  /* Review Card Styling */
+  .card.text-success {
+    background: #f1fff4;
+    border-left: 4px solid #198754;
+    border-radius: 10px;
+    transition: transform 0.2s;
+  }
+  
+  .card.text-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+  
+  /* Submit Button */
+  form button.btn-outline-dark {
+    border-radius: 18px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  
+  form button.btn-outline-dark:hover {
+    background-color: #343a40;
+    color: #fff;
+  }
+  

@@ -26,6 +26,7 @@ const homeRouter = require("./routes/home.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
@@ -37,6 +38,7 @@ const dbUrl= process.env.ATLASDB_URL;
 async function main() {
      mongoose.connect(dbUrl).then(() => {
         console.log("Connected to MongoDB Atlas");
+        console.log("Using DB:", mongoose.connection.name);
      })
     .catch(err => {
         console.log("Error connecting to MongoDB Atlas", err);

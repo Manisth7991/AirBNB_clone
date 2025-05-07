@@ -44,6 +44,7 @@ module.exports.validateReview = (req, res, next) => {
     let {error} = reviewSchema.validate(req.body);
     if (error) {
         let errMsg=error.details.map((el) => el.message).join(",");
+        console.log("❌ Joi Validation Failed:", errMsg);
         throw new ExpressError(404,errMsg);
     }else{
         next();
