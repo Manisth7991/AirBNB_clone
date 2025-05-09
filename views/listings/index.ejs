@@ -115,6 +115,7 @@
         { name: 'castles', img: 'https://a0.muscache.com/pictures/1b6a8b70-a3b6-48b5-88e1-2243d9172c06.jpg' }
       ];
     %>
+    
     <% categories.forEach(cat => { %>
       <div class="filter">
         <a href="/listings?category=<%= cat.name %>">
@@ -131,22 +132,28 @@
       </div>      
     </div>
     <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 mt-3">
-        <% for(let listing of allListings){ %>
-  <a href="/listings/<%= listing._id %>" class="listing-link">
-  <div class="card listing-card col" data-title="<%= listing.title.toLowerCase() %>">
-    <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 20rem;">
-    <div class="card-img-overlay"></div>
-    <div class="card-body">
-      <p class="card-text">
-        <b><%= listing.title %></b> <br>
-        &#8377;<%= listing.price.toLocaleString("en-IN") %>/night
-        <i class="tax-info">&nbsp; +18% GST</i>
-      </p>
-    </div>
-  </div>
-  </a>
-<% } %>
+      <% for(let listing of allListings){ %>
+        <a href="/listings/<%= listing._id %>" class="listing-link">
+          <div 
+            class="card listing-card col" 
+            data-title="<%= listing.title ? listing.title.toLowerCase() : '' %>" 
+            data-location="<%= listing.location ? listing.location.toLowerCase() : '' %>" 
+            data-description="<%= listing.description ? listing.description.toLowerCase() : '' %>" 
+            data-category="<%= listing.category ? listing.category.toLowerCase() : '' %>"
 
+          >
+            <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 20rem;">
+            <div class="card-img-overlay"></div>
+            <div class="card-body">
+              <p class="card-text">
+                <b><%= listing.title %></b> <br>
+                &#8377;<%= listing.price.toLocaleString("en-IN") %>/night
+                <i class="tax-info">&nbsp; +18% GST</i>
+              </p>
+            </div>
+          </div>
+        </a>
+      <% } %>
     </div>
 </body>
 
@@ -162,4 +169,25 @@
       }
     }
   })
+
+  // ✅ Live search filter
+  const liveSearchInput = document.getElementById("liveSearchInput");
+
+  liveSearchInput.addEventListener("input", () => {
+    const searchTerm = liveSearchInput.value.toLowerCase();
+    const cards = document.querySelectorAll(".listing-card");
+
+    cards.forEach(card => {
+      const title = card.dataset.title;
+      const location = card.dataset.location;
+      const description = card.dataset.description;
+      const category = card.dataset.category;
+
+      const matches = [title, location, description, category].some(field =>
+        field.includes(searchTerm)
+      );
+
+      card.parentElement.style.display = matches ? "block" : "none";
+    });
+  });
 </script>

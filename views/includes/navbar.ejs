@@ -30,10 +30,10 @@
       <div class="collapse navbar-collapse mb-2" id="navbarTogglerDemo03">
 
         <div class="navbar-nav ms-auto me-auto mb-2 mb-lg-0">
-          <form class="d-flex search-form" role="search">
-            <input class="form-control me-2 search-inp" type="text" name="query" placeholder="Search destination">
+          <form class="d-flex" role="search" method="GET" action="/listings">
+            <input class="form-control me-2 search-inp" id="liveSearchInput" type="search" placeholder="Search" name="search" value="<%= typeof search !== 'undefined' ? search : '' %>">
             <button class="btn search-btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-          </form>
+          </form>          
         </div>
         
         <div class="navbar-nav ms-auto me-auto mb-2 mb-lg-0" style="background-color: #fff;">

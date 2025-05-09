@@ -109,3 +109,50 @@ module.exports.deleteListing=async (req, res) => {
     req.flash("success","Listing deleted");
     res.redirect("/listings");
 };
+
+
+// search route
+
+// Escape regex special characters in user input
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
+
+module.exports.index = async (req, res) => {
+    try {
+        const { search, category, minPrice, maxPrice } = req.query;
+        const filters = [];
+
+        if (search) {
+            const regex = new RegExp(escapeRegex(search), 'i');
+            filters.push({
+                $or: [
+                    { title: regex },
+                    { location: regex },
+                    { description: regex },
+                    { category: regex } // ✅ Now category is included in search
+                ]
+            });
+        }
+
+        if (category) {
+            filters.push({ category: category });
+        }
+
+        if (minPrice || maxPrice) {
+            const priceFilter = {};
+            if (minPrice) priceFilter.$gte = minPrice;
+            if (maxPrice) priceFilter.$lte = maxPrice;
+            filters.push({ price: priceFilter });
+        }
+
+        const queryObj = filters.length > 0 ? { $and: filters } : {};
+
+        const allListings = await Listing.find(queryObj);
+        res.render("listings/index.ejs", { allListings, category, search, minPrice, maxPrice });
+    } catch (err) {
+        console.error(err);
+        req.flash("error", "Something went wrong while fetching listings.");
+        res.redirect("/listings");
+    }
+};
