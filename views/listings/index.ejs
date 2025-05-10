@@ -22,23 +22,32 @@
       }
 
       .tax-toggle {
-        position: fixed; 
-        top: 4.5rem; 
-        right: 2rem; 
-        background-color: #ffffff;
-        border-radius: 1.7rem;
-        border: 1px solid #dee2e6;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.2rem 2rem;
-        transition: box-shadow 0.3s ease;
-        width: 250px;
-        white-space: nowrap;
-        text-align: center;
-        box-sizing: border-box;
-        z-index: 1050; /* Ensure it's above the filters */
-      }
+  position: fixed;
+  top: 4.5rem;
+  right: 2rem;
+  background-color: #ffffff;
+  border-radius: 1.7rem;
+  border: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.2rem 2rem;
+  transition: box-shadow 0.3s ease;
+  width: 250px;
+  white-space: nowrap;
+  text-align: center;
+  box-sizing: border-box;
+  z-index: 1050;
+}
+
+/* On small screens, place it below the filters */
+@media (max-width: 850px) {
+  .tax-toggle {
+    top: 9.8rem;
+  }
+}
+
+
 
       .tax-toggle:hover {
         box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
@@ -122,14 +131,19 @@
           <p class="<%= category === cat.name ? 'active' : '' %>"><%= cat.name %></p>
         </a>
       </div>
-    <% }) %>
-       <div class="tax-toggle mt-3 shadow-sm">
-        <div class="form-check form-switch d-flex align-items-center gap-3 px-3 py-2">
-          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-          <label class="form-check-label fw-semibold" for="flexSwitchCheckDefault">Display Total after taxes</label>
-        </div>
-      </div>      
+    <% }) %> 
     </div>
+
+    <!-- Moved outside filters container -->
+    <div class="tax-toggle mt-3 shadow-sm">
+      <div class="form-check form-switch d-flex align-items-center gap-3 px-3 py-2">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+        <label class="form-check-label fw-semibold" for="flexSwitchCheckDefault">
+          Display Total after taxes
+        </label>
+      </div>
+    </div>
+
     <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 mt-3">
       <% for(let listing of allListings){ %>
         <a href="/listings/<%= listing._id %>" class="listing-link">
