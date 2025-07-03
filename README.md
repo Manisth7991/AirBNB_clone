@@ -8,7 +8,7 @@ A full-featured **Airbnb Clone** web application built with **Node.js**, **Expre
 
 👉 [View Live Site](https://airbnb-clone-h3ed.onrender.com/listings)
 
-> ⚠️ **Note:** You may see a "Deceptive Site Ahead" warning in Chrome. This is a **false positive** due to Google Safe Browsing’s detection of new/unverified domains with login forms. The site is safe and malware-free. Please see the [Chrome Warning Explained](#-chrome-warning-explained) section below for more info and workarounds.
+> ⚠️ **Note:** You may see a "Deceptive Site Ahead" warning in Chrome. This is a **false positive** due to Google Safe Browsing’s detection of new/unverified domains with login forms. The site is safe and malware-free.
 
 ---
 
