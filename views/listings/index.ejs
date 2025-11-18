@@ -171,22 +171,38 @@
 </body>
 
 <script>
-  let taxSwitch=document.getElementById("flexSwitchCheckDefault");
-  taxSwitch.addEventListener("click",() =>{
-    let taxInfo=document.getElementsByClassName("tax-info");
-    for(info of taxInfo){
-      if(info.style.display != "inline"){
-        info.style.display="inline";
-      }else{
-        info.style.display="none";
+  // ----------------------------
+  // Tax toggle logic
+  // ----------------------------
+  let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+  taxSwitch.addEventListener("click", () => {
+    let taxInfo = document.getElementsByClassName("tax-info");
+    for (info of taxInfo) {
+      if (info.style.display != "inline") {
+        info.style.display = "inline";
+      } else {
+        info.style.display = "none";
       }
     }
-  })
+  });
 
-  // ✅ Live search filter
+  // ----------------------------
+  // Debounce Function
+  // ----------------------------
+  function debounce(fn, delay) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
+  // ----------------------------
+  // Live Search With Debounce
+  // ----------------------------
   const liveSearchInput = document.getElementById("liveSearchInput");
 
-  liveSearchInput.addEventListener("input", () => {
+  const performSearch = () => {
     const searchTerm = liveSearchInput.value.toLowerCase();
     const cards = document.querySelectorAll(".listing-card");
 
@@ -202,5 +218,9 @@
 
       card.parentElement.style.display = matches ? "block" : "none";
     });
-  });
+  };
+
+  const debouncedSearch = debounce(performSearch, 400); // 400ms is smooth
+
+  liveSearchInput.addEventListener("input", debouncedSearch);
 </script>
